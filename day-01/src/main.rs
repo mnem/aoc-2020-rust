@@ -10,7 +10,7 @@ fn main() {
 
 #[derive(Default)]
 struct Puzzle1 {
-    values: Vec<i64>
+    values: Vec<i64>,
 }
 
 impl Puzzle for Puzzle1 {
@@ -30,13 +30,13 @@ impl Puzzle for Puzzle1 {
                 }
             }
         }
-        return "Not found".to_string();
+        "Not found".to_string()
     }
 }
 
 #[derive(Default)]
 struct Puzzle2 {
-    values: Vec<i64>
+    values: Vec<i64>,
 }
 
 impl Puzzle for Puzzle2 {
@@ -59,6 +59,6 @@ impl Puzzle for Puzzle2 {
                 }
             }
         }
-        return "Not found".to_string();
+        "Not found".to_string()
     }
 }
