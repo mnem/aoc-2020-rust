@@ -13,14 +13,14 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="d3e865d1-b1d0-4321-b680-20b5b255c94a" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/../day-02/.idea/day-01.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../day-02/.idea/modules.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../day-02/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../day-02/.idea/workspace.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../day-02/Cargo.toml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../day-02/input.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../day-02/src/main.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/day-01.iml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Cargo.toml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/input.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../day-01/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../day-01/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -59,17 +59,9 @@
     <property name="node.js.selected.package.tslint" value="(autodetect)" />
     <property name="nodejs_package_manager_path" value="npm" />
     <property name="org.rust.cargo.project.model.PROJECT_DISCOVERY" value="true" />
-    <property name="settings.editor.selected.configurable" value="preferences.general" />
-  </component>
-  <component name="RunManager">
-    <configuration default="true" type="GradleAppRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" PASS_PARENT_ENVS_2="true">
-      <method v="2">
-        <option name="com.jetbrains.cidr.cpp.gradle.execution.GradleNativeBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
-      </method>
-    </configuration>
+    <property name="settings.editor.selected.configurable" value="language.rust.rustfmt" />
   </component>
   <component name="RustProjectSettings">
-    <option name="runRustfmtOnSave" value="true" />
     <option name="toolchainHomeDirectory" value="$USER_HOME$/.cargo/bin" />
     <option name="useRustfmt" value="true" />
     <option name="version" value="2" />
@@ -88,7 +80,8 @@
       <workItem from="1575733799982" duration="38000" />
       <workItem from="1576018436349" duration="16000" />
       <workItem from="1606849504718" duration="317000" />
-      <workItem from="1606849910900" duration="4087000" />
+      <workItem from="1606849910900" duration="3520000" />
+      <workItem from="1606918074904" duration="3504000" />
     </task>
     <servers />
   </component>
@@ -99,9 +92,13 @@
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
   </component>
   <component name="WindowStateProjectService">
-    <state x="149" y="36" key="SettingsEditor" timestamp="1606918061618">
+    <state x="149" y="36" key="SettingsEditor" timestamp="1606920025130">
       <screen x="0" y="0" width="1280" height="800" />
     </state>
-    <state x="149" y="36" key="SettingsEditor/0.0.1280.800@0.0.1280.800" timestamp="1606918061618" />
+    <state x="149" y="36" key="SettingsEditor/0.0.1280.800@0.0.1280.800" timestamp="1606920025130" />
+    <state x="305" y="124" width="670" height="676" key="search.everywhere.popup" timestamp="1606919958725">
+      <screen x="0" y="0" width="1280" height="800" />
+    </state>
+    <state x="305" y="124" width="670" height="676" key="search.everywhere.popup/0.0.1280.800@0.0.1280.800" timestamp="1606919958725" />
   </component>
 </project>
