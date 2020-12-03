@@ -41,11 +41,13 @@ impl Puzzle1 {
     fn count_trees(&self, x_step: usize, y_step: usize) -> i64 {
         let mut trees = 0;
         let mut x = x_step;
-        for y in y_step..self.slope.len() {
+        let mut y = y_step;
+        while y < self.slope.len() {
             if self.slope[y][x % self.max_line] == GroundState::Tree {
                 trees += 1;
             }
             x += x_step;
+            y += y_step;
         }
 
         trees
