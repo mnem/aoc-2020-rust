@@ -37,6 +37,19 @@ impl Puzzle1 {
 
         line
     }
+
+    fn count_trees(&self, x_step: usize, y_step: usize) -> i64 {
+        let mut trees = 0;
+        let mut x = x_step;
+        for y in y_step..self.slope.len() {
+            if self.slope[y][x % self.max_line] == GroundState::Tree {
+                trees += 1;
+            }
+            x += x_step;
+        }
+
+        trees
+    }
 }
 
 impl Puzzle for Puzzle1 {
@@ -49,15 +62,13 @@ impl Puzzle for Puzzle1 {
     }
 
     fn final_result(&mut self) -> String {
-        let mut trees = 0;
-        let mut y = 3;
-        for x in 1..self.slope.len() {
-            if self.slope[x][y % self.max_line] == GroundState::Tree {
-                trees += 1;
-            }
-            y += 3;
-        }
-        trees.to_string()
+        let trees_a = self.count_trees(1, 1);
+        let trees_b = self.count_trees(3, 1);
+        let trees_c = self.count_trees(5, 1);
+        let trees_d = self.count_trees(7, 1);
+        let trees_e = self.count_trees(1, 2);
+
+        format!("{}, {}", trees_b, (trees_a * trees_b * trees_c * trees_d * trees_e))
     }
 }
 
