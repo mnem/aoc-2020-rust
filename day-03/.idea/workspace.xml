@@ -13,13 +13,14 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="d3e865d1-b1d0-4321-b680-20b5b255c94a" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/../day-03/.idea/day-01.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../day-03/.idea/modules.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../day-03/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../day-03/.idea/workspace.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../day-03/Cargo.toml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../day-03/input.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../day-03/src/main.rs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/day-01.iml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Cargo.toml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/input.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../day-02/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../day-02/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -61,9 +62,9 @@
     <property name="settings.editor.selected.configurable" value="language.rust.rustfmt" />
   </component>
   <component name="RunManager">
-    <configuration default="true" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" PASS_PARENT_ENVS_2="true">
+    <configuration default="true" type="GradleAppRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" PASS_PARENT_ENVS_2="true">
       <method v="2">
-        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+        <option name="com.jetbrains.cidr.cpp.gradle.execution.GradleNativeBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
       </method>
     </configuration>
   </component>
@@ -87,7 +88,8 @@
       <workItem from="1576018436349" duration="16000" />
       <workItem from="1606849504718" duration="317000" />
       <workItem from="1606849910900" duration="3520000" />
-      <workItem from="1606918074904" duration="5635000" />
+      <workItem from="1606918074904" duration="5355000" />
+      <workItem from="1606988216545" duration="2492000" />
     </task>
     <servers />
   </component>
