@@ -1,76 +1,112 @@
 use common::Puzzle;
-use std::cmp::max;
+use common::FilteredInputLine;
+use std::collections::HashSet;
+use regex::Regex;
 
 fn main() {
-    let mut a: Puzzle1 = Default::default();
+    let mut a = Puzzle1::new();
     a.run();
 
     // let mut b: Puzzle2 = Default::default();
     // b.run();
 }
 
-#[derive(PartialEq, Copy, Clone, Debug)]
-enum GroundState {
-    Open,
-    Tree,
+#[derive(Hash, Clone, Copy, Eq, PartialEq, Debug)]
+enum PassportFields {
+    Byr, Iyr, Eyr, Hgt, Hcl, Ecl, Pid,
 }
 
-type Line = Vec<GroundState>;
+struct Rule {
+    field: PassportFields,
+    matcher: Regex,
+}
 
 #[derive(Default)]
 struct Puzzle1 {
-    slope: Vec<Line>,
-    max_line: usize
+    building: HashSet<PassportFields>,
+    valid_count: usize,
+
+    required_fields: Vec<Rule>
 }
 
 impl Puzzle1 {
-    fn to_line(input: String) -> Line {
-        let mut line = Line::new();
-        for c in input.chars() {
-            let state = match c {
-                '#' => GroundState::Tree,
-                '.' => GroundState::Open,
-                _ => panic!()
-            };
-            line.push(state);
-        }
+    fn new() -> Puzzle1 {
+        let mut rules = Vec::new();
 
-        line
+        rules.push( Rule {
+            field: PassportFields::Byr,
+            matcher: Regex::new(r"byr:(.+?)\b").expect("Whoops")
+        } );
+        rules.push( Rule {
+            field: PassportFields::Iyr,
+            matcher: Regex::new(r"iyr:(.+?)\b").expect("Whoops")
+        } );
+        rules.push( Rule {
+            field: PassportFields::Eyr,
+            matcher: Regex::new(r"eyr:(.+?)\b").expect("Whoops")
+        } );
+        rules.push( Rule {
+            field: PassportFields::Hgt,
+            matcher: Regex::new(r"hgt:(.+?)\b").expect("Whoops")
+        } );
+        rules.push( Rule {
+            field: PassportFields::Hcl,
+            matcher: Regex::new(r"hcl:(.+?)\b").expect("Whoops")
+        } );
+        rules.push( Rule {
+            field: PassportFields::Ecl,
+            matcher: Regex::new(r"ecl:(.+?)\b").expect("Whoops")
+        } );
+        rules.push( Rule {
+            field: PassportFields::Pid,
+            matcher: Regex::new(r"pid:(.+?)\b").expect("Whoops")
+        } );
+
+        Puzzle1 { building: Default::default(), valid_count: Default::default(), required_fields: rules }
     }
 
-    fn count_trees(&self, x_step: usize, y_step: usize) -> i64 {
-        let mut trees = 0;
-        let mut x = x_step;
-        let mut y = y_step;
-        while y < self.slope.len() {
-            if self.slope[y][x % self.max_line] == GroundState::Tree {
-                trees += 1;
-            }
-            x += x_step;
-            y += y_step;
+    fn finalise_passport(&mut self) {
+        if self.building.is_empty() {
+            return;
         }
 
-        trees
+        let required_fields: HashSet<PassportFields> = self.required_fields.iter().map( |r| r.field ).collect();
+
+        let found_fields = self.building.iter().copied().collect();
+        let missing_required_fields: HashSet<&PassportFields> = required_fields.difference(&found_fields).collect();
+
+        // Get ready for the next build
+        self.building.clear();
+
+        if missing_required_fields.is_empty() {
+            self.valid_count += 1;
+        }
     }
 }
 
 impl Puzzle for Puzzle1 {
     type ParsedLine = String;
 
+    fn filter_line(&mut self, line: &str) -> FilteredInputLine {
+        let filtered = self.default_filter_line(line);
+        if let FilteredInputLine::Skip = filtered  {
+            self.finalise_passport();
+        }
+        filtered
+    }
+
+
     fn process_item(&mut self, item: Self::ParsedLine) {
-        let line = Puzzle1::to_line(item);
-        self.max_line = max(self.max_line, line.len());
-        self.slope.push(line);
+        for rule in &self.required_fields {
+            if rule.matcher.captures(&item).is_some() {
+                self.building.insert(rule.field);
+            }
+        }
     }
 
     fn final_result(&mut self) -> String {
-        let trees_a = self.count_trees(1, 1);
-        let trees_b = self.count_trees(3, 1);
-        let trees_c = self.count_trees(5, 1);
-        let trees_d = self.count_trees(7, 1);
-        let trees_e = self.count_trees(1, 2);
-
-        format!("{}, {}", trees_b, (trees_a * trees_b * trees_c * trees_d * trees_e))
+        self.finalise_passport();
+        self.valid_count.to_string()
     }
 }
 
@@ -116,21 +152,22 @@ impl Puzzle for Puzzle1 {
 //     }
 // }
 
-// #[cfg(test)]
-// mod tests {
-//     use super::*;
-//
-//     #[test]
-//     fn example_1() {
-//         assert_eq!(true, Puzzle1::is_valid("1-3 a: abcde".to_string()));
-//         assert_eq!(false, Puzzle1::is_valid("1-3 b: cdefg".to_string()));
-//         assert_eq!(true, Puzzle1::is_valid("2-9 c: ccccccccc".to_string()));
-//     }
-//
-//     #[test]
-//     fn example_2() {
-//         assert_eq!(true, Puzzle2::is_valid("1-3 a: abcde".to_string()));
-//         assert_eq!(false, Puzzle2::is_valid("1-3 b: cdefg".to_string()));
-//         assert_eq!(false, Puzzle2::is_valid("2-9 c: ccccccccc".to_string()));
-//     }
-// }
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn example_1() {
+        let input = "ecl:gry pid:860033327 eyr:2020 hcl:#fffffd\nbyr:1937 iyr:2017 cid:147 hgt:183cm\n\niyr:2013 ecl:amb cid:350 eyr:2023 pid:028048884\nhcl:#cfa07d byr:1929\n\nhcl:#ae17e1 iyr:2013\neyr:2024\necl:brn pid:760753108 byr:1931\nhgt:179cm\n\nhcl:#cfa07d eyr:2025 pid:166559648\niyr:2011 ecl:brn hgt:59in\n".to_string();
+        let mut subject: Puzzle1 = Puzzle1::new();
+        subject.run_with_input(input);
+        assert_eq!(2, subject.valid_count);
+    }
+
+    // #[test]
+    // fn example_2() {
+    //     assert_eq!(true, Puzzle2::is_valid("1-3 a: abcde".to_string()));
+    //     assert_eq!(false, Puzzle2::is_valid("1-3 b: cdefg".to_string()));
+    //     assert_eq!(false, Puzzle2::is_valid("2-9 c: ccccccccc".to_string()));
+    // }
+}

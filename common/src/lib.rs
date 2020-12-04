@@ -1,6 +1,11 @@
 use std::fs;
 use std::time::{Instant, Duration};
 
+pub enum FilteredInputLine {
+    Process,
+    Skip,
+}
+
 pub trait Puzzle {
     type ParsedLine: std::str::FromStr;
 
@@ -14,20 +19,31 @@ pub trait Puzzle {
         }
     }
 
+    fn default_filter_line(&mut self, line: &str) -> FilteredInputLine {
+        let trimmed = line.trim();
+        if trimmed.is_empty() {
+            FilteredInputLine::Skip
+        } else {
+            FilteredInputLine::Process
+        }
+    }
+
+    fn filter_line(&mut self, line: &str) -> FilteredInputLine {
+        self.default_filter_line(line)
+    }
+
     fn input(&self) -> String {
         let input_filename = String::from("input.txt");
         fs::read_to_string(input_filename)
             .expect("Failed to read file")
     }
 
-    fn run(&mut self) {
+    fn run_with_input(&mut self, input: String) {
         let run_start = Instant::now();
         let mut process_durations = Vec::new();
 
-        let input = self.input();
         for line in input.lines() {
-            let trimmed = line.trim();
-            if trimmed.is_empty() {
+            if let FilteredInputLine::Skip = self.filter_line(line) {
                 continue;
             }
             let item = self.parse_line(line);
@@ -52,6 +68,10 @@ pub trait Puzzle {
                  fmt_dur(run_duration),
                  fmt_dur(avg_process), fmt_dur(*min_process), fmt_dur(*max_process),
                  fmt_dur(final_result_duration));
+    }
+
+    fn run(&mut self) {
+        self.run_with_input(self.input());
     }
 }
 
