@@ -1,4 +1,5 @@
 use common::Puzzle;
+use std::collections::HashSet;
 
 fn main() {
     let mut a: Puzzle1 = Default::default();
@@ -24,6 +25,17 @@ impl Puzzle1 {
             }
         }
         row.result().unwrap() * 8 + col.result().unwrap()
+    }
+
+    fn possible_ids() -> HashSet<i32> {
+        let mut ids = HashSet::new();
+        for r in 1..127i32 {
+            for c in 1..7i32 {
+                let id = r * 8 + c;
+                ids.insert(id);
+            }
+        }
+        ids
     }
 }
 
@@ -62,7 +74,22 @@ impl Puzzle for Puzzle1 {
     }
 
     fn final_result(&mut self) -> String {
-        self.seating_ids.iter().max().unwrap().to_string()
+        self.seating_ids.sort();
+
+        let (head, tail) = self.seating_ids.split_at(1);
+        let mut last = head.first().unwrap();
+        let mut my_seat: Option<i32> = None;
+        for id in tail {
+            if last + 1 != *id {
+                my_seat = Some(last + 1);
+                break;
+            }
+            last = id
+        }
+
+        let max_id = self.seating_ids.iter().max().unwrap();
+
+        format!("max: {}, my seat: {}", max_id, my_seat.unwrap())
     }
 }
 
