@@ -13,7 +13,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="d3e865d1-b1d0-4321-b680-20b5b255c94a" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../day-04/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../day-04/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -55,9 +55,9 @@
     <property name="settings.editor.selected.configurable" value="language.rust.rustfmt" />
   </component>
   <component name="RunManager">
-    <configuration default="true" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" PASS_PARENT_ENVS_2="true">
+    <configuration default="true" type="GradleAppRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" PASS_PARENT_ENVS_2="true">
       <method v="2">
-        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+        <option name="com.jetbrains.cidr.cpp.gradle.execution.GradleNativeBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
       </method>
     </configuration>
   </component>
@@ -83,7 +83,9 @@
       <workItem from="1606849910900" duration="3520000" />
       <workItem from="1606918074904" duration="5355000" />
       <workItem from="1606988216545" duration="3728000" />
-      <workItem from="1607023365792" duration="14355000" />
+      <workItem from="1607023166678" duration="89000" />
+      <workItem from="1607023269163" duration="95000" />
+      <workItem from="1607168474118" duration="2003000" />
     </task>
     <servers />
   </component>
