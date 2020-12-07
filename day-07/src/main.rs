@@ -50,7 +50,7 @@ impl Puzzle1 {
         (bag_colour, rules)
     }
 
-    fn count_containers_of(&self, bag: String) -> usize {
+    fn count_containers_of(&self, bag: &str) -> usize {
         let mut hits: HashSet<String> = HashSet::new();
         self.find_all_containers(&bag, &mut hits);
         hits.len()
@@ -66,6 +66,15 @@ impl Puzzle1 {
             }
         }
     }
+
+    fn count_contained_by(&self, bag: &str) -> usize {
+        let mut count = 0usize;
+        for rule in &self.bag_rules[bag] {
+            count += &rule.quantity;
+            count += self.count_contained_by(&rule.colour) * rule.quantity;
+        }
+        count
+    }
 }
 
 impl Puzzle for Puzzle1 {
@@ -80,7 +89,10 @@ impl Puzzle for Puzzle1 {
     }
 
     fn final_result(&mut self) -> String {
-        self.count_containers_of("shiny gold".to_string()).to_string()
+        let containers = self.count_containers_of("shiny gold");
+        let contained = self.count_contained_by("shiny gold");
+
+        format!("Containers of: {}; contained by: {}", containers, contained)
     }
 }
 
@@ -118,6 +130,16 @@ mod tests {
         subject.run_with_input(input);
 
         assert_eq!(9, subject.bag_rules.len());
-        assert_eq!(4, subject.count_containers_of("shiny gold".to_string()));
+        assert_eq!(4, subject.count_containers_of("shiny gold"));
+    }
+
+    #[test]
+    fn example_2() {
+        let input = "shiny gold bags contain 2 dark red bags.\ndark red bags contain 2 dark orange bags.\ndark orange bags contain 2 dark yellow bags.\ndark yellow bags contain 2 dark green bags.\ndark green bags contain 2 dark blue bags.\ndark blue bags contain 2 dark violet bags.\ndark violet bags contain no other bags".to_string();
+        let mut subject = Puzzle1::new();
+        subject.run_with_input(input);
+
+        assert_eq!(7, subject.bag_rules.len());
+        assert_eq!(126, subject.count_contained_by("shiny gold"));
     }
 }
