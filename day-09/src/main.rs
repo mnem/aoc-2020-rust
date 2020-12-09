@@ -10,6 +10,7 @@ fn main() {
 #[derive(Default)]
 struct Puzzle1 {
     buffer: VecDeque<i64>,
+    list: Vec<i64>,
     weak_number: Option<i64>,
     preamble_length: usize,
 }
@@ -28,31 +29,61 @@ impl Puzzle1 {
 
         false
     }
+
+    fn check_for_weakness(&mut self, n: i64) {
+        if self.weak_number.is_some() {
+            // Already have it
+            return
+        }
+
+        if self.buffer.len() < self.preamble_length {
+            // still reading preamble
+            self.buffer.push_back(n);
+        } else if self.is_valid(n) {
+            self.buffer.pop_front();
+            self.buffer.push_back(n);
+        } else {
+            // Found the odd one out
+            self.weak_number = Some(n);
+        }
+    }
+
+    fn find_weak_range(&self) -> &[i64] {
+        let target = self.weak_number.unwrap();
+        for a_i in 0..(self.list.len() - 1) {
+            for b_i in (a_i + 1)..self.list.len() {
+                let slice = &self.list[a_i..=b_i];
+                if slice.iter().sum::<i64>() == target {
+                    return slice;
+                }
+            }
+        }
+
+        panic!()
+    }
+
+    fn find_encryption_weakness(&self) -> i64 {
+        let weakness = self.find_weak_range();
+        let min = weakness.iter().min().unwrap();
+        let max = weakness.iter().max().unwrap();
+
+        min + max
+    }
 }
 
 impl Puzzle for Puzzle1 {
     type ParsedLine = i64;
 
     fn process_item(&mut self, item: Self::ParsedLine) {
-        if self.weak_number.is_some() {
-            // found it, ignore the rest
-        } else if self.buffer.len() < self.preamble_length {
-            // still reading preamble
-            self.buffer.push_back(item);
-        } else if self.is_valid(item) {
-            self.buffer.pop_front();
-            self.buffer.push_back(item);
-        } else {
-            // Found the odd one out
-            self.weak_number = Some(item);
-        }
+        self.list.push(item);
+        self.check_for_weakness(item);
     }
 
     fn final_result(&mut self) -> String {
-        match self.weak_number {
-            Some(n) => n.to_string(),
-            None => "Not found".to_string(),
-        }
+        let weak_num = self.weak_number.unwrap();
+        let weak_enc = self.find_encryption_weakness();
+
+        format!("weak number: {}; weak encryption: {}", weak_num, weak_enc)
     }
 }
 
@@ -69,5 +100,6 @@ mod tests {
 
         assert!(subject.weak_number.is_some());
         assert_eq!(127, subject.weak_number.unwrap());
+        assert_eq!(62, subject.find_encryption_weakness());
     }
 }
