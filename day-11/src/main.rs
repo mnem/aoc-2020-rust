@@ -10,6 +10,12 @@ enum FloorState {
     Empty,
     Seat,
     Person,
+    Hyperspace,
+}
+
+enum Perception {
+    Close,
+    Far,
 }
 
 type Row = Vec<FloorState>;
@@ -18,6 +24,9 @@ type Row = Vec<FloorState>;
 struct Puzzle1 {
     rows: Vec<Row>,
     previous: Vec<Row>,
+
+    close_occupied: i64,
+    far_occupied: i64,
 }
 
 impl Puzzle1 {
@@ -37,18 +46,18 @@ impl Puzzle1 {
 
     fn read(&self, x: i64, y: i64) -> FloorState {
         if y < 0 || y as usize >= self.rows.len() {
-            return FloorState::Empty;
+            return FloorState::Hyperspace;
         }
 
         let row = &self.rows[y as usize];
         if x < 0 || x as usize >= row.len() {
-            return FloorState::Empty;
+            return FloorState::Hyperspace;
         }
 
         row[x as usize]
     }
 
-    fn sample(&self, x: i64, y: i64) -> Vec<FloorState> {
+    fn sample_close(&self, x: i64, y: i64) -> Vec<FloorState> {
         let mut sample = Vec::new();
         for y_d in -1..=1 {
             for x_d in -1..=1 {
@@ -56,22 +65,51 @@ impl Puzzle1 {
                     continue;
                 }
                 let state = self.read(x + x_d, y + y_d);
-                if state != FloorState::Empty {
-                    sample.push(state);
-                }
+                sample.push(state);
             }
         }
         sample
     }
 
-    fn step(&self) -> Vec<Row> {
+    fn sample_directed(&self, x: i64, y: i64, d_x: i64, d_y: i64) -> FloorState {
+        let mut cur_x = x + d_x;
+        let mut cur_y = y +  d_y;
+        let mut sample = self.read(cur_x, cur_y);
+        while sample == FloorState::Empty {
+            cur_x += d_x;
+            cur_y += d_y;
+            sample = self.read(cur_x, cur_y);
+        }
+        sample
+    }
+
+    fn sample_far(&self, x: i64, y: i64) -> Vec<FloorState> {
+        let mut sample = Vec::new();
+
+        sample.push(self.sample_directed(x, y, 0, -1));
+        sample.push(self.sample_directed(x, y, 0, 1));
+        sample.push(self.sample_directed(x, y, -1, 0));
+        sample.push(self.sample_directed(x, y, 1, 0));
+        sample.push(self.sample_directed(x, y, 1, 1));
+        sample.push(self.sample_directed(x, y, -1, -1));
+        sample.push(self.sample_directed(x, y, 1, -1));
+        sample.push(self.sample_directed(x, y, -1, 1));
+
+        sample
+    }
+
+    fn step(&self, tolerance: usize, perception: &Perception) -> Vec<Row> {
         let mut next_state = Vec::new();
         for y in 0..self.rows.len() as i64 {
             let row = &self.rows[y as usize];
             let mut new_row = Row::new();
             for x in 0..row.len() as i64 {
-                let sample = self.sample(x, y);
+                let sample = match perception {
+                    Perception::Close => self.sample_close(x, y),
+                    Perception::Far => self.sample_far(x, y),
+                };
                 let next_seat_state = match self.read(x, y) {
+                    FloorState::Hyperspace => panic!(),
                     FloorState::Empty => FloorState::Empty,
                     FloorState::Seat => {
                         if sample.iter().filter(|&f| *f == FloorState::Person).count() == 0 {
@@ -81,7 +119,7 @@ impl Puzzle1 {
                         }
                     },
                     FloorState::Person => {
-                        if sample.iter().filter(|&f| *f == FloorState::Person).count() >= 4 {
+                        if sample.iter().filter(|&f| *f == FloorState::Person).count() >= tolerance {
                             FloorState::Seat
                         } else {
                             FloorState::Person
@@ -96,8 +134,8 @@ impl Puzzle1 {
         next_state
     }
 
-    fn step_and_swap(&mut self) {
-        let new_state = self.step();
+    fn step_and_swap(&mut self, tolerance: usize, perception: &Perception) {
+        let new_state = self.step(tolerance, perception);
         self.previous = self.rows.clone();
         self.rows = new_state;
     }
@@ -109,6 +147,7 @@ impl Puzzle1 {
                     FloorState::Empty => ".",
                     FloorState::Seat => "L",
                     FloorState::Person => "#",
+                    FloorState::Hyperspace => panic!(),
                 };
                 print!("{}", str);
             }
@@ -120,9 +159,9 @@ impl Puzzle1 {
         Puzzle1::print(&self.rows);
     }
 
-    fn run_to_stability(&mut self) {
+    fn run_to_stability(&mut self, tolerance: usize, perception: Perception) {
         while self.rows != self.previous {
-            self.step_and_swap();
+            self.step_and_swap(tolerance, &perception);
         }
     }
 
@@ -144,8 +183,17 @@ impl Puzzle for Puzzle1 {
     }
 
     fn final_result(&mut self) -> String {
-        self.run_to_stability();
-        self.count_occupied().to_string()
+        let initial = self.rows.clone();
+
+        self.run_to_stability(4, Perception::Close);
+        self.close_occupied = self.count_occupied();
+
+        self.rows = initial;
+        self.previous = Vec::new();
+        self.run_to_stability(5, Perception::Far);
+        self.far_occupied = self.count_occupied();
+
+        format!("close: {}; far: {}", self.close_occupied, self.far_occupied)
     }
 }
 
@@ -159,18 +207,7 @@ mod tests {
         let mut subject: Puzzle1 = Default::default();
         subject.run_with_input(input);
 
-        let num_occupied = subject.count_occupied();
-
-        assert_eq!(37, num_occupied);
+        assert_eq!(37, subject.close_occupied);
+        assert_eq!(26, subject.far_occupied);
     }
-
-    // #[test]
-    // fn example_2() {
-    //     let input = "28\n33\n18\n42\n31\n14\n46\n20\n48\n47\n24\n23\n49\n45\n19\n38\n39\n11\n1\n32\n25\n35\n8\n17\n7\n9\n4\n2\n34\n10\n3".to_string();
-    //     let mut subject: Puzzle1 = Default::default();
-    //     subject.run_with_input(input);
-    //
-    //     assert_eq!(31, subject.adaptors.len());
-    //     assert_eq!(22 * 10, subject.part_a());
-    // }
 }

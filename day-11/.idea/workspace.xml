@@ -15,6 +15,8 @@
     <list default="true" id="d3e865d1-b1d0-4321-b680-20b5b255c94a" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/../day-10/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../day-10/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../day-10/src/main.rs" beforeDir="false" afterPath="$PROJECT_DIR$/../day-10/src/main.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/main.rs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -86,7 +88,7 @@
       <workItem from="1606988216545" duration="3728000" />
       <workItem from="1607023166678" duration="89000" />
       <workItem from="1607023269163" duration="95000" />
-      <workItem from="1607713872092" duration="4557000" />
+      <workItem from="1607713872092" duration="6827000" />
     </task>
     <servers />
   </component>
@@ -101,7 +103,7 @@
       <breakpoints>
         <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
           <url>file://$PROJECT_DIR$/src/main.rs</url>
-          <line>148</line>
+          <line>188</line>
           <option name="timeStamp" value="1" />
         </line-breakpoint>
       </breakpoints>
