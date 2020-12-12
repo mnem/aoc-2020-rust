@@ -5,6 +5,11 @@ fn main() {
     let mut a: Puzzle1 = Default::default();
     a.direction = 90;
     a.run();
+
+    let mut b: Puzzle2 = Default::default();
+    b.w_x = 10;
+    b.w_y = 1;
+    b.run();
 }
 
 #[derive(PartialEq, Copy, Clone, Debug)]
@@ -118,6 +123,98 @@ impl Puzzle for Puzzle1 {
     }
 }
 
+
+#[derive(Default)]
+struct Puzzle2 {
+    x: i32,
+    y: i32,
+
+    w_x: i32,
+    w_y: i32,
+}
+
+impl Puzzle2 {
+    fn move_north(&mut self, quantity: i32) {
+        self.w_y += quantity;
+    }
+
+    fn move_south(&mut self, quantity: i32) {
+        self.w_y += -quantity;
+    }
+
+    fn move_east(&mut self, quantity: i32) {
+        self.w_x += quantity;
+    }
+
+    fn move_west(&mut self, quantity: i32) {
+        self.w_x += -quantity;
+    }
+
+    fn rotate_ccw(&mut self, direction: i32) {
+        match direction {
+            // 0 => ,
+            90 | -270 => {
+                let tmp_y = self.w_y;
+                self.w_y = self.w_x;
+                self.w_x = -tmp_y;
+            },
+            180 | -180 => {
+                self.w_y = -self.w_y;
+                self.w_x = -self.w_x;
+            },
+            270 | -90 => {
+                let tmp_y = self.w_y;
+                self.w_y = -self.w_x;
+                self.w_x = tmp_y;
+            },
+
+            // Our boat is like the Automan car
+            _ => panic!(format!("Can't move with {} degrees!", direction)),
+        };
+    }
+
+    fn rotate_cw(&mut self, direction: i32) {
+        self.rotate_ccw(-direction);
+    }
+
+    fn move_forward(&mut self, quantity: i32) {
+        self.x += self.w_x * quantity;
+        self.y += self.w_y * quantity;
+    }
+
+    fn execute(&mut self, command: Command) {
+        match command {
+            Command::North(n) => self.move_north(n),
+            Command::South(n) => self.move_south(n),
+            Command::East(n) => self.move_east(n),
+            Command::West(n) => self.move_west(n),
+
+            Command::RotateLeft(n) => self.rotate_ccw(n),
+            Command::RotateRight(n) => self.rotate_cw(n),
+
+            Command::Forward(n) => self.move_forward(n),
+        };
+    }
+
+    fn manhattan_distance(&self) -> i32 {
+        self.x.abs() + self.y.abs()
+    }
+}
+
+impl Puzzle for Puzzle2 {
+    type ParsedLine = String;
+
+    fn process_item(&mut self, item: Self::ParsedLine) {
+        let command = Puzzle1::to_command(item);
+        self.execute(command);
+    }
+
+    fn final_result(&mut self) -> String {
+        self.manhattan_distance().to_string()
+    }
+}
+
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -130,5 +227,58 @@ mod tests {
         subject.run_with_input(input);
 
         assert_eq!(25, subject.manhattan_distance());
+    }
+
+    #[test]
+    fn example_2() {
+        let input = "F10\nN3\nF7\nR90\nF11".to_string();
+        let mut subject: Puzzle2 = Default::default();
+        subject.w_x = 10;
+        subject.w_y = 1;
+        subject.run_with_input(input);
+
+        assert_eq!(286, subject.manhattan_distance());
+    }
+
+    #[test]
+    fn example_3() {
+        let input = "F10".to_string();
+        let mut subject: Puzzle2 = Default::default();
+        subject.w_x = 10;
+        subject.w_y = 1;
+        subject.run_with_input(input);
+
+        assert_eq!(10, subject.w_x);
+        assert_eq!(1, subject.w_y);
+        assert_eq!(100, subject.x);
+        assert_eq!(10, subject.y);
+    }
+
+    #[test]
+    fn example_4() {
+        let input = "R90\nF10".to_string();
+        let mut subject: Puzzle2 = Default::default();
+        subject.w_x = 10;
+        subject.w_y = 1;
+        subject.run_with_input(input);
+
+        assert_eq!(1, subject.w_x);
+        assert_eq!(-10, subject.w_y);
+        assert_eq!(10, subject.x);
+        assert_eq!(-100, subject.y);
+    }
+
+    #[test]
+    fn example_5() {
+        let input = "L90\nF10".to_string();
+        let mut subject: Puzzle2 = Default::default();
+        subject.w_x = 10;
+        subject.w_y = 1;
+        subject.run_with_input(input);
+
+        assert_eq!(-1, subject.w_x);
+        assert_eq!(10, subject.w_y);
+        assert_eq!(-10, subject.x);
+        assert_eq!(100, subject.y);
     }
 }
